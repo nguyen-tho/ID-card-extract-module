@@ -1,0 +1,47 @@
+[
+  {
+    "class": "date_of_birth",
+    "text": "13/01/2001",
+    "prob": 0.932521504163742
+  },
+  {
+    "class": "hometown",
+    "text": "Bình Quới, Châu Thành, Long An",
+    "prob": 0.9329653263092041
+  },
+  {
+    "class": "id",
+    "text": "080201002671",
+    "prob": 0.9250732213258743
+  },
+  {
+    "class": "permanent_residence1",
+    "text": "118/3, Bình Sơn",
+    "prob": 0.9244140982627869
+  },
+  {
+    "class": "date_of_expiry",
+    "text": "13/01/2026",
+    "prob": 0.9339956521987915
+  },
+  {
+    "class": "permanent_residence2",
+    "text": "Bình Quới, Châu Thành, Long An",
+    "prob": 0.9338447829087575
+  },
+  {
+    "class": "sex",
+    "text": "Nam",
+    "prob": 0.8626694877942404
+  },
+  {
+    "class": "name",
+    "text": "NGUYỄN VĂN BẢO NGỌC",
+    "prob": 0.9357081432091562
+  },
+  {
+    "class": "nationality",
+    "text": "Việt Nam",
+    "prob": 0.9344027563929558
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "class": "permanent_resident",
+    "text": "118/3, Bình Sơn, Bình Quới, Châu Thành, Long An"
+  },
+  {
+    "class": "date_of_birth",
+    "text": "13/01/2001"
+  },
+  {
+    "class": "hometown",
+    "text": "Bình Quới, Châu Thành, Long An"
+  },
+  {
+    "class": "id",
+    "text": "080201002671"
+  },
+  {
+    "class": "date_of_expiry",
+    "text": "13/01/2026"
+  },
+  {
+    "class": "sex",
+    "text": "Nam"
+  },
+  {
+    "class": "name",
+    "text": "NGUYỄN VĂN BẢO NGỌC"
+  },
+  {
+    "class": "nationality",
+    "text": "Việt Nam"
+  }
+]

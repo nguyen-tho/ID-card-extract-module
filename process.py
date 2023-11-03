@@ -5,9 +5,11 @@ from ultralytics import YOLO
 from vietocr.tool.predictor import Predictor
 from vietocr.tool.config import Cfg
 import cv2
-
+import torch
+import os 
 import preprocessing as pre
 import realesrgan as real
+import postprocessing as post
 class_name_dict = {0: 'date_of_birth',
                    1: 'date_of_expiry',
                    2: 'hometown',
@@ -19,10 +21,7 @@ class_name_dict = {0: 'date_of_birth',
                    8: 'person',
                    9: 'sex'}
 
-img_path = '../cccd2.jpg' # not need to change
-preprocessed = pre.preprocessing(img_path)
-model_path = '../id_card_yolov8x.pt' #model path
-real_out = real.realesrgan(preprocessed)
+
 def read_image(image_path):
     img = Image.open(image_path)  # open image file
     return img
@@ -56,7 +55,7 @@ def ocr_extract(img_path,model_path, threshold):#input image is a PIL image
         #ocr_img = img[int(y1):int(y2), int(x1):int(x2), :].copy()
             roi = img_array[int(y1):int(y2), int(x1):int(x2)]
             ocr_img = Image.fromarray(roi)
-            ocr_img.save('../o'+str(i)+'.jpg')
+            ocr_img.save('temp/o'+str(i)+'.jpg')
             i = i + 1
         #preprocess ROI images
         #roi = cv2.cvtColor(ocr_img, cv2.COLOR_BGR2GRAY)
@@ -77,7 +76,7 @@ def ocr_extract(img_path,model_path, threshold):#input image is a PIL image
                      })
 
 # Save labeled objects information to a JSON file
-    with open('../labeled_objects.json', 'w', encoding='utf-8') as json_file:
+    with open('temp/labeled_objects.json', 'w', encoding='utf-8') as json_file:
         json.dump(labeled_objects, json_file, ensure_ascii=False, indent=4)
 
     labeled_objects = [] #clear data after use
@@ -86,12 +85,12 @@ def ocr_extract(img_path,model_path, threshold):#input image is a PIL image
 # Create a drawing object to draw on the image
 # show which class in each box
 # Save the modified image with bounding boxes drawn
-def save_output_image(img_path, model_path, threshold):
+def save_output_image(img_path, model_path, threshold, name):
     img = read_image(img_path)
     draw = ImageDraw.Draw(img)
     results = model_result(model_path, img)
     
-    font = ImageFont.truetype("arial.ttf", 24)  # Use a TTF font file and specify the font size
+    font = ImageFont.truetype("arial.ttf", 36)  # Use a TTF font file and specify the font size
     
     # Define the text color
     text_color = (255, 0, 0)  # RGB color
@@ -111,30 +110,27 @@ def save_output_image(img_path, model_path, threshold):
                 # Draw the text on the image
                 draw.text(text_position, f"{class_name}", fill=text_color, font=font)
     
-    img.save('../output.jpg')
+    img.save(f'output/{name}/output.jpg')
     
     
-def mean_prob(json_path):
-  #read json data
-  with open(json_path, 'r', encoding='utf-8') as json_file:
-    data = json.load(json_file)
-  prob_values = [entry["prob"] for entry in data]
 
-# Calculate the mean
-  mean_prob = sum(prob_values) / len(prob_values)
-  percentage = mean_prob*100
+def processing(input_img_path, name):
 
-# Print the mean
-  print("Mean of prob values:", mean_prob)
-  print(f"Percentage of mean prob value: {percentage:.2f}%")
-
-import torch
-torch.cuda.is_available()
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-ocr_extract(real_out, model_path, 0.5)
-save_output_image(real_out, model_path, 0.5)
-out = cv2.imread('../output.jpg')
-cv2.imshow('output', out)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-mean_prob('../labeled_objects.json')
+    print("Cuda available: ",torch.cuda.is_available())
+    #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # not need to change
+    directory_path = f'output/{name}/'
+    if not os.path.exists(directory_path):
+    # If it doesn't exist, create the directory and any necessary parent directories
+        os.makedirs(directory_path)
+    else:
+        print(f"The {directory_path} is exist")
+    preprocessed = pre.preprocessing(input_img_path)
+    model_path = ' id_card_yolov8x.pt' #model path
+    real_out = real.realesrgan(preprocessed)
+    ocr_extract(real_out, model_path, 0.5)
+    save_output_image(real_out, model_path, 0.5, name)
+    post.filter("temp/labeled_objects.json", name)
+    post.merge_permanent_residence(f'output/{name}/labeled_objects_filled.json', name)
+    post.mean_prob(f'output/{name}/labeled_objects_filled.json', name)
+    
+processing('input/cccd.jpg', 'ngoc')

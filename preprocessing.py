@@ -140,14 +140,14 @@ def deskew(skewed_image):
     M = cv2.getRotationMatrix2D(center, angle, 1.0)
     deskewed_image = cv2.warpAffine(skewed_image, M, (w, h), flags=cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REPLICATE)
     return deskewed_image
-
+"""
 import fast_deskew
 def deskew_image(image):
     #gray = cv2.cvtColor(image, cv2.)
     result_image, best_angle = fast_deskew.deskew_image(image) 
     print('Rotate angle: '+ str(best_angle))
     return result_image
-
+"""
 #img = cv2.imread('perspective.jpg')
 #deskewed =deskew(img)
 #cv2.imwrite('deskewed.jpg', deskewed)
@@ -181,7 +181,7 @@ def preprocessing(img_path): # input image is RGB or grayscale
     #plt.imshow(scanned)
     # save image
     print('Preprocessing image has been saved in perspective.jpg')
-    output_path = '../perspective.jpg'
+    output_path = 'temp/perspective.jpg'
     cv2.imwrite(output_path, scanned)
     return output_path #output is path of preprocessed image
     

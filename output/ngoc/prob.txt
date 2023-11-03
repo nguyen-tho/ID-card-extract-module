@@ -1,0 +1,2 @@
+Mean of prob values: 0.9239549969517233
+Percentage of mean prob value: 92.40%
