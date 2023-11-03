@@ -72,7 +72,8 @@ def ocr_extract(img_path,model_path, threshold):#input image is a PIL image
                     labeled_objects.append({
                     "class": class_name,
                     "text": text.strip(),
-                    "prob": prob
+                    "prob": prob,
+                    "score": score
                      })
 
 # Save labeled objects information to a JSON file
@@ -133,4 +134,4 @@ def processing(input_img_path, name):
     post.merge_permanent_residence(f'output/{name}/labeled_objects_filled.json', name)
     post.mean_prob(f'output/{name}/labeled_objects_filled.json', name)
     
-processing('input/cccd.jpg', 'ngoc')
+processing('input/cccd2.jpg', 'tho')

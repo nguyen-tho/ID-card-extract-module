@@ -57,7 +57,8 @@ def merge_permanent_residence(json_path, name):
         new_data = []
 
     # Filter and keep only "class" and "text" features
-    new_data.extend([{"class": item["class"], "text": item["text"]} for item in data if item["class"] != "permanent_residence1" and item["class"] != "permanent_residence2"])
+    new_data.extend([{"class": item["class"], "text": item["text"]} for item in data if item["class"] != "permanent_residence1" 
+                     and item["class"] != "permanent_residence2"])
     # Write the modified data to the output JSON file
     with open(f'output/{name}/result.json', 'w', encoding='utf-8') as output_file:
         json.dump(new_data, output_file, ensure_ascii=False, indent=2)
@@ -67,16 +68,23 @@ def mean_prob(json_path, name):
   with open(json_path, 'r', encoding='utf-8') as json_file:
     data = json.load(json_file)
   prob_values = [entry["prob"] for entry in data]
+  score_value = [entry["score"] for entry in data]
 
 # Calculate the mean
   mean_prob = sum(prob_values) / len(prob_values)
-  percentage = mean_prob*100
+  mean_score = sum(score_value) / len(score_value)
+  prob_percentage = mean_prob*100
+  score_percentage = mean_score*100
   text_path = f'output/{name}/prob.txt'
   with open(text_path, 'w') as txt:
+      txt.write(f"Mean score of model: {mean_score}\n")
+      txt.write(f"Percentage of mean score value: {score_percentage:.2f}%\n")
       txt.write(f"Mean of prob values: {mean_prob}\n")
-      txt.write(f"Percentage of mean prob value: {percentage:.2f}%")
+      txt.write(f"Percentage of mean prob value: {prob_percentage:.2f}%")
   print(f"The result is saved in {text_path}")
 # Print the mean
-  print("Calculate the extract probability is finished !")
+  print("Calculate the extract probability and score is finished !")
+  print(f"Mean score of model: {mean_score}")
+  print(f"Percentage of mean score value: {score_percentage:.2f}%")
   print("Mean of prob values:", mean_prob)
-  print(f"Percentage of mean prob value: {percentage:.2f}%")
+  print(f"Percentage of mean prob value: {prob_percentage:.2f}%")

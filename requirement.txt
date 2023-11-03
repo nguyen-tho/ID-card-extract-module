@@ -1,0 +1,6 @@
+vietocr
+ultralytics
+Pillow
+torch
+opencv-python
+scikit-image
