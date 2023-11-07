@@ -8,3 +8,8 @@
    ```sh
    python process.py
    ```
+4. References
+   - Label dataset tool: https://app.roboflow.com/
+   - Training model tool: https://hub.ultralytics.com/
+   - Enhancing resolution tool: https://github.com/xinntao/Real-ESRGAN
+   
