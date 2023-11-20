@@ -17,7 +17,7 @@
    - Advantages:
      * YOLOv8x confidence: about 81-86%
      * VietOCR extract probability: about 90-92%
-     * RealESRGAN may boost accuracy more about 0.5-1%
+     * RealESRGAN may boost probability of extraction period more about 0.5-1%
    - Disadvantages:
      * Need to get an ID card image clear and balance about brightness to catch edge of the card
      * If preprocess feature cannot draw contour of the ID card -> show error and stop program immediately 
