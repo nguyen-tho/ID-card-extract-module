@@ -12,6 +12,7 @@
    - Label dataset tool: https://app.roboflow.com/
    - Training model tool: https://hub.ultralytics.com/
    - Enhancing resolution tool: https://github.com/xinntao/Real-ESRGAN
+   - OCR extraction tool: https://github.com/pbcquoc/vietocr.git
 
 5. Advantages and disadvatages
    - Advantages:
