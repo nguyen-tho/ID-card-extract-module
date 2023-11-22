@@ -68,7 +68,7 @@ def mean_prob(json_path, name):
   with open(json_path, 'r', encoding='utf-8') as json_file:
     data = json.load(json_file)
   prob_values = [entry["prob"] for entry in data]
-  score_value = [entry["score"] for entry in data]
+  score_value = [entry["confidence"] for entry in data]
 
 # Calculate the mean
   mean_prob = sum(prob_values) / len(prob_values)

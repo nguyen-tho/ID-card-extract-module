@@ -56,7 +56,7 @@ def ocr_extract(img_path,model_path, threshold):#input image is a PIL image
             roi = img_array[int(y1):int(y2), int(x1):int(x2)]
             ocr_img = Image.fromarray(roi)
             ocr_img.save('temp/o'+str(i)+'.jpg')
-            i = i + 1
+            
         #preprocess ROI images
         #roi = cv2.cvtColor(ocr_img, cv2.COLOR_BGR2GRAY)
        # _,roi = cv2.threshold(roi,128,255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
@@ -73,9 +73,9 @@ def ocr_extract(img_path,model_path, threshold):#input image is a PIL image
                     "class": class_name,
                     "text": text.strip(),
                     "prob": prob,
-                    "score": score
+                    "confidence": score
                      })
-
+            i = i + 1
 # Save labeled objects information to a JSON file
     with open('temp/labeled_objects.json', 'w', encoding='utf-8') as json_file:
         json.dump(labeled_objects, json_file, ensure_ascii=False, indent=4)
@@ -127,11 +127,15 @@ def processing(input_img_path, name):
         print(f"The {directory_path} is exist")
     preprocessed = pre.preprocessing(input_img_path)
     model_path = ' id_card_yolov8x.pt' #model path
-    real_out = real.realesrgan(preprocessed)
-    ocr_extract(real_out, model_path, 0.5)
-    save_output_image(real_out, model_path, 0.5, name)
+    img = cv2.imread(input_img_path)
+    #real_in_path = 'temp/real_in.jpg'
+    #cv2.imwrite(real_in_path, img)
+    #real_out = real.realesrgan(real_in_path)
+    #real_out = real.realesrgan(preprocessed)
+    ocr_extract(preprocessed, model_path, 0.5)
+    save_output_image(preprocessed, model_path, 0.5, name)
     post.filter("temp/labeled_objects.json", name)
     post.merge_permanent_residence(f'output/{name}/labeled_objects_filled.json', name)
     post.mean_prob(f'output/{name}/labeled_objects_filled.json', name)
     
-processing('input/cccd2.jpg', 'tho')
+processing('input/cccd5.jpg', 'tho3')

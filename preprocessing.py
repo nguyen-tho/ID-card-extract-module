@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
-
+import realesrgan as real
 from skimage.filters import threshold_local
 from PIL import Image
 def opencv_resize(image, ratio):
@@ -165,24 +165,47 @@ def preprocessing(img_path): # input image is RGB or grayscale
     rectKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 10))
     dilated = cv2.dilate(blurred, rectKernel)
     edged = cv2.Canny(dilated, 50, 300, apertureSize=3)
-    contours, hierarchy = cv2.findContours(edged, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    perspective_path = 'temp/perspective.jpg'
+    #if canny cannot edge detection -> skip perspective 
+    #it means from original to dwskew if the image was tilted
+    try:
+        contours, hierarchy = cv2.findContours(edged, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     #image_with_contours = cv2.drawContours(image.copy(), contours, -1, (0,255,0), 3)
-    largest_contours = sorted(contours, key = cv2.contourArea, reverse = True)[:10]
+        largest_contours = sorted(contours, key = cv2.contourArea, reverse = True)[:10]
     #image_with_largest_contours = cv2.drawContours(image.copy(), largest_contours, -1, (0,255,0), 3)
-    receipt_contour = get_receipt_contour(largest_contours)
+        receipt_contour = get_receipt_contour(largest_contours)
     #image_with_receipt_contour = cv2.drawContours(image.copy(), [receipt_contour], -1, (0, 255, 0), 2)
-    scanned = wrap_perspective(original.copy(),
+        scanned = wrap_perspective(original.copy(),
                                contour_to_rect(receipt_contour, resize_ratio))
-    
-    scanned = deskew(scanned)
-    result = bw_scanner(scanned)
-    print('Result image shape: ',result.shape)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        scanned = deskew(image)
+        result = bw_scanner(scanned)
+        print('Result image shape: ',result.shape)
+        output_path = perspective_path
+        cv2.imwrite(output_path, scanned)
+        
+    else:
+        contours, hierarchy = cv2.findContours(edged, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    #image_with_contours = cv2.drawContours(image.copy(), contours, -1, (0,255,0), 3)
+        largest_contours = sorted(contours, key = cv2.contourArea, reverse = True)[:10]
+    #image_with_largest_contours = cv2.drawContours(image.copy(), largest_contours, -1, (0,255,0), 3)
+        receipt_contour = get_receipt_contour(largest_contours)
+    #image_with_receipt_contour = cv2.drawContours(image.copy(), [receipt_contour], -1, (0, 255, 0), 2)
+        scanned = wrap_perspective(original.copy(),
+                               contour_to_rect(receipt_contour, resize_ratio))
+        
+        scanned = deskew(scanned)
+        result = bw_scanner(scanned)
+        print('Result image shape: ',result.shape)
     #plt.figure(figsize=(16,10))
     #plt.imshow(scanned)
     # save image
-    print('Preprocessing image has been saved in perspective.jpg')
-    output_path = 'temp/perspective.jpg'
-    cv2.imwrite(output_path, scanned)
+        print('Preprocessing image has been saved in perspective.jpg')
+        
+        cv2.imwrite(perspective_path, scanned)
+        output_path = real.realesrgan(perspective_path)
+    
     return output_path #output is path of preprocessed image
     
     
