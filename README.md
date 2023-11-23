@@ -12,14 +12,12 @@
 5. References
    - Label dataset tool: https://app.roboflow.com/
    - Training model tool: https://hub.ultralytics.com/
-   - Enhancing resolution tool: https://github.com/xinntao/Real-ESRGAN
    - OCR extraction tool: https://github.com/pbcquoc/vietocr.git
 
 6. Advantages and disadvatages
    - Advantages:
      * YOLOv8x confidence: about 71-80%
      * Information extract probability: about 80-93% (VietOCR about 88-92%)
-     * RealESRGAN may boost probability of extraction period more about 0.5-1%
    - Disadvantages:
      * Need to get an ID card image clear and balance about brightness to catch edge of the card
      * If preprocess feature cannot draw contour of the ID card -> show error and stop program immediately
