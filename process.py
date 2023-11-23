@@ -7,20 +7,21 @@ from vietocr.tool.config import Cfg
 import cv2
 import torch
 import os 
+from qreader import QReader
+from datetime import datetime
 import preprocessing as pre
 import realesrgan as real
 import postprocessing as post
-class_name_dict = {0: 'date_of_birth',
-                   1: 'date_of_expiry',
-                   2: 'hometown',
-                   3: 'id',
-                   4: 'name',
-                   5: 'nationality',
-                   6: 'permanent_residence1',
-                   7: 'permanent_residence2',
-                   8: 'person',
-                   9: 'sex'}
-
+class_name_dict = {0: 'QRcode',
+                   1: 'addr1',
+                   2: 'addr2',
+                   3: 'dob',
+                   4: 'expiry',
+                   5: 'gender',
+                   6: 'hometown',
+                   7: 'id',
+                   8: 'name',
+                   9: 'nationality'}
 
 def read_image(image_path):
     img = Image.open(image_path)  # open image file
@@ -38,6 +39,36 @@ def set_detector():
     detector = Predictor(config)
     return detector
     
+
+
+def extract_and_format_date(qr_code_image_path):
+    # Create a QReader instance
+    qreader = QReader()
+
+    # Get the image that contains the QR code
+    image = cv2.cvtColor(cv2.imread(qr_code_image_path), cv2.COLOR_BGR2RGB)
+
+    # Use the detect_and_decode function to get the decoded QR data
+    decoded_text = qreader.detect_and_decode(image=image)
+
+    # Use the decoded QR data as input for the second part of your code
+    input_string = str(decoded_text)
+
+    # Extract the date string
+    date_string = ''.join(c for c in input_string.split('|')[-1] if c.isdigit())
+
+    # Convert the date string to a datetime object
+    date_object = datetime.strptime(date_string, '%d%m%Y')
+
+    # Format the datetime object as a new string
+    formatted_date = date_object.strftime('%d/%m/%Y')
+
+    return formatted_date
+
+# Example usage
+qr_code_image_path = "temp/o0.jpg"
+formatted_date = extract_and_format_date(qr_code_image_path)
+print(formatted_date)
 
 def ocr_extract(img_path,model_path, threshold):#input image is a PIL image
     img = read_image(img_path)
@@ -67,7 +98,7 @@ def ocr_extract(img_path,model_path, threshold):#input image is a PIL image
             if class_id in class_name_dict:
                 class_name = class_name_dict[class_id]
 
-                if class_name != 'person': # not to write the portrait info
+                if class_name != 'QRcode': # not to write the portrait info
                 # Store the relevant information in the labeled_objects list
                     labeled_objects.append({
                     "class": class_name,
@@ -75,6 +106,14 @@ def ocr_extract(img_path,model_path, threshold):#input image is a PIL image
                     "prob": prob,
                     "confidence": score
                      })
+                else:
+                    formatted_date = extract_and_format_date('temp/o'+str(i)+'.jpg')
+                    labeled_objects.append({
+                        "class": "issue_date",
+                        "text": formatted_date,
+                        "prob": 1, #QR code cannot extract by OCR and it will detect exactly
+                        "confidence": score
+                    })
             i = i + 1
 # Save labeled objects information to a JSON file
     with open('temp/labeled_objects.json', 'w', encoding='utf-8') as json_file:
@@ -126,14 +165,14 @@ def processing(input_img_path, name):
     else:
         print(f"The {directory_path} is exist")
     preprocessed = pre.preprocessing(input_img_path)
-    model_path = ' id_card_yolov8x.pt' #model path
+    model_path = 'ID-card-extractor-v2.pt' #model path
     img = cv2.imread(input_img_path)
     #real_in_path = 'temp/real_in.jpg'
     #cv2.imwrite(real_in_path, img)
     #real_out = real.realesrgan(real_in_path)
     #real_out = real.realesrgan(preprocessed)
-    ocr_extract(preprocessed, model_path, 0.5)
-    save_output_image(preprocessed, model_path, 0.5, name)
+    ocr_extract(preprocessed, model_path, 0.25)
+    save_output_image(preprocessed, model_path, 0.25, name)
     post.filter("temp/labeled_objects.json", name)
     post.merge_permanent_residence(f'output/{name}/labeled_objects_filled.json', name)
     post.mean_prob(f'output/{name}/labeled_objects_filled.json', name)

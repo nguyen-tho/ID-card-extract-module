@@ -47,18 +47,18 @@ def find_text_by_class(json_data, target_class):
 def merge_permanent_residence(json_path, name):
     data = read_json_file(json_path)
 
-    permanent_resident1 = find_text_by_class(data, 'permanent_residence1')
-    permanent_resident2 = find_text_by_class(data, 'permanent_residence2')
+    permanent_resident1 = find_text_by_class(data, 'addr1')
+    permanent_resident2 = find_text_by_class(data, 'addr2')
     if permanent_resident1 is not None and permanent_resident2 is not None:
-        permanent_resident = permanent_resident1 + ", " + permanent_resident2
+        permanent_resident = permanent_resident1 + " " + permanent_resident2
         # Create a new list with the merged permanent_resident class
         new_data = [{"class": "permanent_resident", "text": permanent_resident}]
     else:
         new_data = []
 
     # Filter and keep only "class" and "text" features
-    new_data.extend([{"class": item["class"], "text": item["text"]} for item in data if item["class"] != "permanent_residence1" 
-                     and item["class"] != "permanent_residence2"])
+    new_data.extend([{"class": item["class"], "text": item["text"]} for item in data if item["class"] != "addr1" 
+                     and item["class"] != "addr2"])
     # Write the modified data to the output JSON file
     with open(f'output/{name}/result.json', 'w', encoding='utf-8') as output_file:
         json.dump(new_data, output_file, ensure_ascii=False, indent=2)
@@ -77,14 +77,14 @@ def mean_prob(json_path, name):
   score_percentage = mean_score*100
   text_path = f'output/{name}/prob.txt'
   with open(text_path, 'w') as txt:
-      txt.write(f"Mean score of model: {mean_score}\n")
+      txt.write(f"Mean confidence of model: {mean_score}\n")
       txt.write(f"Percentage of mean score value: {score_percentage:.2f}%\n")
       txt.write(f"Mean of prob values: {mean_prob}\n")
       txt.write(f"Percentage of mean prob value: {prob_percentage:.2f}%")
   print(f"The result is saved in {text_path}")
 # Print the mean
   print("Calculate the extract probability and score is finished !")
-  print(f"Mean score of model: {mean_score}")
+  print(f"Mean confidence of model: {mean_score}")
   print(f"Percentage of mean score value: {score_percentage:.2f}%")
   print("Mean of prob values:", mean_prob)
   print(f"Percentage of mean prob value: {prob_percentage:.2f}%")
