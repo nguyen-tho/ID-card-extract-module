@@ -13,6 +13,7 @@
    - Label dataset tool: https://app.roboflow.com/
    - Training model tool: https://hub.ultralytics.com/
    - OCR extraction tool: https://github.com/pbcquoc/vietocr.git
+   - QR code extract tool: https://pypi.org/project/qreader
 
 6. Advantages and disadvatages
    - Advantages:
