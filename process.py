@@ -66,10 +66,6 @@ def extract_and_format_date(qr_code_image_path):
     return formatted_date
 
 # Example usage
-qr_code_image_path = "temp/o0.jpg"
-formatted_date = extract_and_format_date(qr_code_image_path)
-print(formatted_date)
-
 def ocr_extract(img_path,model_path, threshold):#input image is a PIL image
     img = read_image(img_path)
     labeled_objects = []
@@ -107,13 +103,23 @@ def ocr_extract(img_path,model_path, threshold):#input image is a PIL image
                     "confidence": score
                      })
                 else:
-                    formatted_date = extract_and_format_date('temp/o'+str(i)+'.jpg')
-                    labeled_objects.append({
-                        "class": "issue_date",
-                        "text": formatted_date,
-                        "prob": 1, #QR code cannot extract by OCR and it will detect exactly
-                        "confidence": score
-                    })
+                    try:
+                        formatted_date = extract_and_format_date('temp/o'+str(i)+'.jpg')
+                    except:
+                        print('QR code extraction is in error')
+                        labeled_objects.append({
+                            "class": "issue_date",
+                            "text": "",
+                            "prob": 0, #QR code cannot extract by OCR and it will detect exactly
+                            "confidence": score
+                        })
+                    else:
+                        labeled_objects.append({
+                            "class": "issue_date",
+                            "text": formatted_date,
+                            "prob": 1, #QR code cannot extract by OCR and it will detect exactly
+                            "confidence": score
+                        })
             i = i + 1
 # Save labeled objects information to a JSON file
     with open('temp/labeled_objects.json', 'w', encoding='utf-8') as json_file:
@@ -171,10 +177,14 @@ def processing(input_img_path, name):
     #cv2.imwrite(real_in_path, img)
     #real_out = real.realesrgan(real_in_path)
     #real_out = real.realesrgan(preprocessed)
-    ocr_extract(preprocessed, model_path, 0.25)
-    save_output_image(preprocessed, model_path, 0.25, name)
+    try:
+        
+        ocr_extract(preprocessed, model_path, 0.25)
+        save_output_image(preprocessed, model_path, 0.25, name)
+    except:
+        print("ERROR! Please try with another image")
     post.filter("temp/labeled_objects.json", name)
     post.merge_permanent_residence(f'output/{name}/labeled_objects_filled.json', name)
     post.mean_prob(f'output/{name}/labeled_objects_filled.json', name)
     
-processing('input/cccd5.jpg', 'tho3')
+processing('input/cccd3.jpg', 'tho4')

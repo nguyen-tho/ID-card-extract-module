@@ -165,7 +165,7 @@ def preprocessing(img_path): # input image is RGB or grayscale
     rectKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 10))
     dilated = cv2.dilate(blurred, rectKernel)
     edged = cv2.Canny(dilated, 50, 300, apertureSize=3)
-    perspective_path = 'temp/perspective.jpg'
+    perspective_path = 'temp/preprosessed.jpg'
     #if canny cannot edge detection -> skip perspective 
     #it means from original to dwskew if the image was tilted
     try:
@@ -177,8 +177,8 @@ def preprocessing(img_path): # input image is RGB or grayscale
     #image_with_receipt_contour = cv2.drawContours(image.copy(), [receipt_contour], -1, (0, 255, 0), 2)
         scanned = wrap_perspective(original.copy(),
                                contour_to_rect(receipt_contour, resize_ratio))
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+    except:
+        print("Can not do perspespective transformation for this image. Skip it!")
         scanned = deskew(image)
         result = bw_scanner(scanned)
         print('Result image shape: ',result.shape)
@@ -201,7 +201,7 @@ def preprocessing(img_path): # input image is RGB or grayscale
     #plt.figure(figsize=(16,10))
     #plt.imshow(scanned)
     # save image
-        print('Preprocessing image has been saved in perspective.jpg')
+        print('Preprocessing image has been saved in preprocessed.jpg')
         
         cv2.imwrite(perspective_path, scanned)
         output_path = real.realesrgan(perspective_path)
