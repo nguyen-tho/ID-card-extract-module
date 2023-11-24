@@ -1,0 +1,56 @@
+[
+  {
+    "class": "permanent_residence1",
+    "text": "Tổ 17, Khu 6",
+    "prob": 0.9263355632623037,
+    "confidence": 0.9261333346366882
+  },
+  {
+    "class": "date_of_birth",
+    "text": "11/06/2001",
+    "prob": 0.9319334208965302,
+    "confidence": 0.9080764055252075
+  },
+  {
+    "class": "date_of_expiry",
+    "text": "11/06/2026", 
+    "prob": 0.9359891891479493,
+    "confidence": 0.8988062143325806
+  },
+  {
+    "class": "permanent_residence2",
+    "text": "TT. Tân Phú, Tân Phú, Đồng Nai",
+    "prob": 0.9291167596975962,
+    "confidence": 0.8834322690963745
+  },
+  {
+    "class": "id",
+    "text": "075201016578",
+    "prob": 0.9187284409999847,
+    "confidence": 0.881557822227478
+  },
+  {
+    "class": "sex",
+    "text": "Nam",
+    "prob": 0.8890069921811422,
+    "confidence": 0.8678693175315857
+  },
+  {
+    "class": "hometown",
+    "text": "Cát Trinh, Phù Cắt, Bình Định",
+    "prob": 0.9284890705141527,
+    "confidence": 0.8617392778396606
+  },
+  {
+    "class": "name",
+    "text": "NGUYỄN CÔNG THỌ",
+    "prob": 0.9345142682393391,
+    "confidence": 0.8616218566894531
+  },
+  {
+    "class": "nationality",
+    "text": "Việt Nam",
+    "prob": 0.9306125789880753,
+    "confidence": 0.8571658134460449
+  }
+]

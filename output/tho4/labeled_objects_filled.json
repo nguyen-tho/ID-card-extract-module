@@ -1,0 +1,62 @@
+[
+  {
+    "class": "issue_date",
+    "text": "",
+    "prob": 0,
+    "confidence": 0.9464696645736694
+  },
+  {
+    "class": "expiry",
+    "text": "11/06/2026",
+    "prob": 0.9364073932170868,
+    "confidence": 0.8675071001052856
+  },
+  {
+    "class": "name",
+    "text": "NGUYỄN CÔNG THỌ",
+    "prob": 0.9348063230514526,
+    "confidence": 0.8453316688537598
+  },
+  {
+    "class": "id",
+    "text": "075201016578",
+    "prob": 0.9164943844079971,
+    "confidence": 0.8208501935005188
+  },
+  {
+    "class": "dob",
+    "text": "11/06/2001",
+    "prob": 0.9312793552875519,
+    "confidence": 0.8025985956192017
+  },
+  {
+    "class": "addr1",
+    "text": "Tổ 17, Khu 6",
+    "prob": 0.9299564063549042,
+    "confidence": 0.7866640090942383
+  },
+  {
+    "class": "nationality",
+    "text": "Việt Nam",
+    "prob": 0.9348212257027626,
+    "confidence": 0.7638627886772156
+  },
+  {
+    "class": "addr2",
+    "text": "TT. Tân Phú, Tân Phú, Đồng Nai",
+    "prob": 0.9220413247744242,
+    "confidence": 0.7623983025550842
+  },
+  {
+    "class": "hometown",
+    "text": "Cát Trinh, Phù Cắt, Bình Định",
+    "prob": 0.9311834018805931,
+    "confidence": 0.735188364982605
+  },
+  {
+    "class": "gender",
+    "text": "Nam",
+    "prob": 0.9092888832092285,
+    "confidence": 0.7261034250259399
+  }
+]

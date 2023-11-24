@@ -1,0 +1,4 @@
+Mean confidence of model: 0.8056974112987518
+Percentage of mean score value: 80.57%
+Mean of prob values: 0.8346278697886002
+Percentage of mean prob value: 83.46%

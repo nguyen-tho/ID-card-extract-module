@@ -1,47 +1,62 @@
 [
   {
-    "class": "date_of_birth",
-    "text": "13/01/2001",
-    "prob": 0.932521504163742
+    "class": "issue_date",
+    "text": "31/12/2021",
+    "prob": 1,
+    "confidence": 0.9434513449668884
   },
   {
-    "class": "hometown",
-    "text": "Bình Quới, Châu Thành, Long An",
-    "prob": 0.9329653263092041
-  },
-  {
-    "class": "id",
-    "text": "080201002671",
-    "prob": 0.9250732213258743
-  },
-  {
-    "class": "permanent_residence1",
-    "text": "118/3, Bình Sơn",
-    "prob": 0.9244140982627869
-  },
-  {
-    "class": "date_of_expiry",
+    "class": "expiry",
     "text": "13/01/2026",
-    "prob": 0.9339956521987915
-  },
-  {
-    "class": "permanent_residence2",
-    "text": "Bình Quới, Châu Thành, Long An",
-    "prob": 0.9338447829087575
-  },
-  {
-    "class": "sex",
-    "text": "Nam",
-    "prob": 0.8626694877942404
+    "prob": 0.9373192310333252,
+    "confidence": 0.857804536819458
   },
   {
     "class": "name",
     "text": "NGUYỄN VĂN BẢO NGỌC",
-    "prob": 0.9357081432091562
+    "prob": 0.9343039675762779,
+    "confidence": 0.8547623753547668
+  },
+  {
+    "class": "addr1",
+    "text": "118/3, Bình Sơn",
+    "prob": 0.9055813034375508,
+    "confidence": 0.8508774638175964
+  },
+  {
+    "class": "hometown",
+    "text": "Bình Quới, Châu Thành, Long An",
+    "prob": 0.9336796879768372,
+    "confidence": 0.7622267603874207
+  },
+  {
+    "class": "addr2",
+    "text": "Bình Quới, Châu Thành, Long An",
+    "prob": 0.9341148614883423,
+    "confidence": 0.7553265690803528
+  },
+  {
+    "class": "id",
+    "text": "080201002671",
+    "prob": 0.9249686946471533,
+    "confidence": 0.7475878000259399
   },
   {
     "class": "nationality",
     "text": "Việt Nam",
-    "prob": 0.9344027563929558
+    "prob": 0.9349877238273621,
+    "confidence": 0.7406115531921387
+  },
+  {
+    "class": "dob",
+    "text": "13/01/2001",
+    "prob": 0.9312331557273865,
+    "confidence": 0.7337049841880798
+  },
+  {
+    "class": "gender",
+    "text": "Nam",
+    "prob": 0.9026481509208679,
+    "confidence": 0.6252530217170715
   }
 ]
