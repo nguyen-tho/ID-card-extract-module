@@ -29,7 +29,7 @@
    - Extract information from QR code such as issue date instead of create a new model to detect issue date at back-side of ID card
    - Update with REST API
    ```sh
-   python app.py <path of input image> <username>
+   python app.py
    #access http://127.0.0.1:5000 to observe the result
    ```
    
