@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+</head>
+<body>
+
+    <h2>Image Upload</h2>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+
+        <label for="image">Select an image:</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+        <br>
+
+        <button type="button" onclick="upload()">Upload</button>
+        <p id="demo"></p>
+    </form>
+
+    <script>
+        function upload() {
+            var form = document.getElementById('uploadForm');
+            var formData = new FormData(form);
+            var username = document.getElementById('username').value;
+            var filename = document.getElementById('image').files[0].name;  // Get the file name
+
+            // Append the username and filename to the URL
+            var url = 'http://127.0.0.1:5000/process/' + encodeURIComponent(username) + '/' + encodeURIComponent(filename);
+            location.replace(url);
+        }
+    </script>
+
+</body>
+</html>
