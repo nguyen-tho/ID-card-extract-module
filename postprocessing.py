@@ -14,14 +14,16 @@ output is another json which filled
 """    
 def filter(json_path, name):
     # read json data
+   
     data = read_json_file(json_path)
     class_probabilities = {}
 # Create a dictionary to store the highest probability for each class
     for item in data:
         current_class = item["class"]
         current_prob = item["prob"]
+        current_conf = item["confidence"]
         if current_class in class_probabilities:
-            if current_prob > class_probabilities[current_class]["prob"]:
+            if current_prob > class_probabilities[current_class]["prob"] :
                 class_probabilities[current_class] = item
         else:
             class_probabilities[current_class] = item
@@ -44,27 +46,29 @@ def find_text_by_class(json_data, target_class):
             return item["text"]
     return None  # Return None if the class is not found in the JSON data
     
-def merge_permanent_residence(json_path, name):
+def merge_permanent_residence(name):
+    json_path = f'output/{name}/labeled_objects_filled.json'
     data = read_json_file(json_path)
 
-    permanent_resident1 = find_text_by_class(data, 'addr1')
-    permanent_resident2 = find_text_by_class(data, 'addr2')
+    permanent_resident1 = find_text_by_class(data, 'permanent_residence1')
+    permanent_resident2 = find_text_by_class(data, 'permanent_residence2')
     if permanent_resident1 is not None and permanent_resident2 is not None:
         permanent_resident = permanent_resident1 + " " + permanent_resident2
         # Create a new list with the merged permanent_resident class
-        new_data = [{"class": "permanent_resident", "text": permanent_resident}]
+        new_data = [{"class": "permanent_residence", "text": permanent_resident}]
     else:
         new_data = []
 
     # Filter and keep only "class" and "text" features
-    new_data.extend([{"class": item["class"], "text": item["text"]} for item in data if item["class"] != "addr1" 
-                     and item["class"] != "addr2"])
+    new_data.extend([{"class": item["class"], "text": item["text"]} for item in data if item["class"] != "permanent_residence1" 
+                     and item["class"] != "permanent_residence2"])
     # Write the modified data to the output JSON file
     with open(f'output/{name}/result.json', 'w', encoding='utf-8') as output_file:
         json.dump(new_data, output_file, ensure_ascii=False, indent=2)
 
-def mean_prob(json_path, name):
+def mean_prob(name):
   #read json data
+  json_path = f'output/{name}/labeled_objects_filled.json'
   with open(json_path, 'r', encoding='utf-8') as json_file:
     data = json.load(json_file)
   prob_values = [entry["prob"] for entry in data]
