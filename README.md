@@ -5,7 +5,11 @@
    ```sh
    git clone https://github.com/nguyen-tho/ID-card-extract-module.git
    ```
-4. Run process.py
+4. Install dependancies
+ ```sh
+ pip install -r requirements.txt
+ ```   
+5. Run process.py
    ```sh
    # run processing function in process.py
    python process.py
@@ -13,10 +17,7 @@
    python app.py
    #access http://127.0.0.1:5000 to observe the result
    ```
-5. Install dependancies
- ```sh
-pip install -r requirements.txt
-```   
+
 6. References
    - Label dataset tool: https://app.roboflow.com/
    - Training model tool: https://hub.ultralytics.com/
