@@ -5,7 +5,7 @@
    ```sh
    git clone https://github.com/nguyen-tho/ID-card-extract-module.git
    ```
-4. Install dependancies
+4. Install dependencies
  ```sh
  pip install -r requirements.txt
  ```   
