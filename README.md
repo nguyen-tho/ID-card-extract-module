@@ -1,6 +1,10 @@
 # ID-card-extract-module
 1. Download model file follow link: https://hub.ultralytics.com/models/hgfIRTQBokYdGBQS7orm (Model 1 - use for extract text on front side of IDcard except portrait and QR code) 
-2. Update new model: https://api.ultralytics.com/v1/predict/je3LTBqoLDRiZBtYRSYQ (Model 2 - use for extract QR code except text fields)
+   Update new model: https://api.ultralytics.com/v1/predict/je3LTBqoLDRiZBtYRSYQ (Model 2 - use for extract QR code except text fields)
+   
+2. Dataset:
+   - version 1: https://hub.ultralytics.com/datasets/EQ74fFtZdCei1GTLJRJF
+   - version 2: https://hub.ultralytics.com/datasets/G44KxW5Rce9ztGGqnI6X
 3. Clone the module:
    ```sh
    git clone https://github.com/nguyen-tho/ID-card-extract-module.git
