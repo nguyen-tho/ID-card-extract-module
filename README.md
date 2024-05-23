@@ -45,6 +45,18 @@ The program extract basic information such as name, ID number, date of birth,...
 8. New update
    - New model to detect QR code on Vietnamese ID card
    - Extract information from QR code such as issue date instead of create a new model to detect issue date at back-side of ID card
-   - Update with REST API
+   - Update with REST API (Incomplete)
    - Combine 2 models to improve the result
-   
+9. Demo
+
+   Input image
+
+   ![input](https://github.com/nguyen-tho/ID-card-extract-module/blob/main/input/cccd.jpg)
+
+   Output image
+
+   ![output](https://github.com/nguyen-tho/ID-card-extract-module/blob/main/output/ngoc/output.jpg)
+
+   Output result (json)
+
+   ![json](https://github.com/nguyen-tho/ID-card-extract-module/blob/main/output/ngoc/result.json)
