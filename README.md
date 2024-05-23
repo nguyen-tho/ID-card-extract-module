@@ -59,4 +59,4 @@ The program extract basic information such as name, ID number, date of birth,...
 
    Output result (json)
 
-   ![json](https://github.com/nguyen-tho/ID-card-extract-module/blob/main/output/ngoc/result.json)
+   ![click here to show json](https://github.com/nguyen-tho/ID-card-extract-module/blob/main/output/ngoc/result.json)
