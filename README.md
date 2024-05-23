@@ -23,7 +23,8 @@ The program extract basic information such as name, ID number, date of birth,...
    # run processing function in process.py
    python process.py
    #run REST API
-   python app.py
+   #python app.py
+   # API is incomplete 
    #access http://127.0.0.1:5000 to observe the result
    ```
 
