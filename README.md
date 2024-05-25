@@ -34,20 +34,12 @@ The program extract basic information such as name, ID number, date of birth,...
    - OCR extraction tool: https://github.com/pbcquoc/vietocr.git
    - QR code extract tool: https://pypi.org/project/qreader
 
-7. Advantages and disadvatages
-   - Advantages:
-     * YOLOv8x confidence: about 80-90%
-     * Information extract probability: about 80-93% (VietOCR about 88-92%)
-   - Disadvantages:
-     * Need to get an ID card image clear and balance about brightness to catch edge of the card
-     * If preprocess feature cannot draw contour of the ID card -> show error and stop program immediately
-     * Mean of extract probability may be affected by QR code extraction (If QR code can extract information -> probability is 1 -> mean probability increase, otherwise probability is 0 -> mean probability decrease)
-8. New update
+7. New update
    - New model to detect QR code on Vietnamese ID card
    - Extract information from QR code such as issue date instead of create a new model to detect issue date at back-side of ID card
    - Update with REST API (Incomplete)
    - Combine 2 models to improve the result
-9. Demo
+8. Demo
 
    Input image
 
@@ -63,3 +55,6 @@ The program extract basic information such as name, ID number, date of birth,...
 
    Confidence and extraction probability
   ![click here to show](https://github.com/nguyen-tho/ID-card-extract-module/blob/main/output/ngoc/prob.txt)
+9. Contact:
+
+    Please contact with me at this email address to discuss: nguyencongtho116@gmail.com
