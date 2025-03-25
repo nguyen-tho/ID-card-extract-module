@@ -3,6 +3,7 @@ from process import processing  # Import the processing function from your modul
 import sys
 import postprocessing as post
 import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__, template_folder='template')
 app.json.ensure_ascii = False
@@ -10,38 +11,30 @@ app.json.ensure_ascii = False
 def home():
     return render_template('index.html')
 
+
+
 @app.route('/', methods=['POST', 'GET'])
 def upload():
     if request.method == 'POST':
         username = request.form.get('username')
         image = request.files['image']
-        return redirect(f'/process/<{username}>/<{image.filename}>'), 200
+        if image:
+            filename = secure_filename(image.filename)
+            filepath = os.path.join('uploads', filename)
+            image.save(filepath)
+
+            # Process the image directly here
+            try:
+                processing(filepath, username)
+                result = post.read_json_file(f'output/{username}/result.json')
+                return jsonify(result) # Or return some other success message
+            except Exception as e:
+                return jsonify({'error': str(e)}), 500
+        else:
+            return "No image uploaded", 400
     else:
         return render_template('index.html')
-    
-@app.route('/process/<username>/<image>', methods=['GET'])
-def run_processing(username, image):
-    file_path = os.path.join('uploads', image)
-    try:
-        # Assuming the input is a JSON payload with file_path and output_name
 
-        # Extract parameters from the JSON payload
-        # file_path = request.args.get('param1', default=sys.argv[1] if len(sys.argv) > 1 else None)
-        # output_name = request.args.get('param2', default=sys.argv[2] if len(sys.argv) > 2 else None)
-
-        # Check if the required parameters are present
-        if not file_path or not image:
-            return jsonify({'error': 'Missing required parameters'}), 400
-
-        # Call the processing function with the provided parameters
-        processing(file_path, username)
-        result = post.read_json_file(f'output/{username}/result.json')
-
-        # Return the result as JSON
-        return jsonify(result)
-    except Exception as e:
-        # Handle any errors that may occur during the processing
-        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':

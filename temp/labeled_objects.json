@@ -1,47 +1,68 @@
 [
     {
-        "class": "date_of_birth",
-        "text": "13/01/2001",
-        "prob": 0.932521504163742
-    },
-    {
-        "class": "hometown",
-        "text": "Bình Quới, Châu Thành, Long An",
-        "prob": 0.9329653263092041
-    },
-    {
-        "class": "id",
-        "text": "080201002671",
-        "prob": 0.9250732213258743
-    },
-    {
         "class": "permanent_residence1",
-        "text": "118/3, Bình Sơn",
-        "prob": 0.9244140982627869
+        "text": "Tổ 17, Khu 6",
+        "prob": 0.9263355632623037,
+        "confidence": 0.9261333346366882
+    },
+    {
+        "class": "date_of_birth",
+        "text": "11/06/2001",
+        "prob": 0.9319334208965302,
+        "confidence": 0.9080764055252075
     },
     {
         "class": "date_of_expiry",
-        "text": "13/01/2026",
-        "prob": 0.9339956521987915
+        "text": "11/06/2026",
+        "prob": 0.9359891891479493,
+        "confidence": 0.8988062143325806
     },
     {
         "class": "permanent_residence2",
-        "text": "Bình Quới, Châu Thành, Long An",
-        "prob": 0.9338447829087575
+        "text": "TT. Tân Phú, Tân Phú, Đồng Nai",
+        "prob": 0.9291167596975962,
+        "confidence": 0.8834322690963745
+    },
+    {
+        "class": "id",
+        "text": "075201016578",
+        "prob": 0.9187284409999847,
+        "confidence": 0.881557822227478
     },
     {
         "class": "sex",
         "text": "Nam",
-        "prob": 0.8626694877942404
+        "prob": 0.8890069921811422,
+        "confidence": 0.8678693175315857
+    },
+    {
+        "class": "hometown",
+        "text": "Cát Trinh, Phù Cắt, Bình Định",
+        "prob": 0.9284890705141527,
+        "confidence": 0.8617392778396606
     },
     {
         "class": "name",
-        "text": "NGUYỄN VĂN BẢO NGỌC",
-        "prob": 0.9357081432091562
+        "text": "NGUYỄN CÔNG THỌ",
+        "prob": 0.9345142682393391,
+        "confidence": 0.8616218566894531
     },
     {
         "class": "nationality",
         "text": "Việt Nam",
-        "prob": 0.9344027563929558
+        "prob": 0.9306125789880753,
+        "confidence": 0.8571658134460449
+    },
+    {
+        "class": "hometown",
+        "text": "HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM",
+        "prob": 0.9139272519226732,
+        "confidence": 0.6760894060134888
+    },
+    {
+        "class": "issue_date",
+        "text": "",
+        "prob": 0,
+        "confidence": 0.9464696645736694
     }
 ]
