@@ -2,11 +2,19 @@ import json
 import os
 
 
-def read_json_file(json_path):
-    with open(json_path, 'r', encoding='utf-8') as json_file:
-        data = json.load(json_file)
-    
-    return data
+def read_json_file(file_path):
+    print(f"Reading JSON from: {file_path}")
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            print(f"Read data: {data}")
+            return data
+    except FileNotFoundError:
+        print("Error: File not found.")
+        return None
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON: {e}")
+        return None
  
 """
 fill some duplicate classes in json data

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processing Result</title>
+</head>
+<body>
+    <h1>Processing Result</h1>
+    <p>Username: {{username}}</p>
+    <p>Image: {{image}}</p>
+    {% if result %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Class</th>
+                    <th>Text</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in result %}
+                    <tr>
+                        <td>{{ item.class }}</td>
+                        <td>{{ item.text }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No result available.</p>
+    {% endif %}
+</body>
+</html>

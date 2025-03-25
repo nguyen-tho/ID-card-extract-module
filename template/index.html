@@ -4,35 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Upload</title>
+    <style>
+        .container {
+            display: flex; /* Use flexbox to arrange elements side-by-side */
+        }
+        .result {
+            width: 50%; /* Adjust as needed */
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        label { display: block; margin-bottom: 5px; }
+        input { width: 300px; padding: 5px; margin-bottom: 10px; }
+        .form-container { width: 400px; margin: 20px auto; }
+
+        #image {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+          }
+    </style>
 </head>
 <body>
 
-    <h2>Image Upload</h2>
+    <div class="container">
+        <div>
+            <h2>Image Upload</h2>
 
-    <form id="uploadForm" enctype="multipart/form-data">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <br>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <br>
 
-        <label for="image">Select an image:</label>
-        <input type="file" id="image" name="image" accept="image/*" required>
-        <br>
+                <label for="image">Chọn ảnh CCCD:</label>
+                <input type="file" id="image" name="image" accept="image/*" multiple required>
+                <br>
 
-        <button type="button" onclick="upload()">Upload</button>
-        <p id="demo"></p>
-    </form>
+                <button type="submit" onclick="upload()">Upload</button>
+                <p id="demo"></p>
+            </form>
+        </div>
+
+        <div class="result" id="resultDisplay">
+            <div class="form-container">
+                <form id="dataForm">
+                    <h2>Kết quả thông tin trích xuất từ CCCD</h2>
+                    <label for="name">Họ và tên:</label>
+                    <input type="text" id="name" name="name" readonly>
+        
+                    <label for="date_of_birth">Ngày sinh:</label>
+                    <input type="text" id="date_of_birth" name="date_of_birth" readonly>
+        
+                    <label for="sex">Giới tính:</label>
+                    <input type="text" id="sex" name="sex" readonly>
+        
+                    <label for="nationality">Quốc tịch:</label>
+                    <input type="text" id="nationality" name="nationality" readonly>
+        
+                    <label for="id">Số CCCD</label>
+                    <input type="text" id="id" name="id" readonly>
+        
+                    <label for="hometown">Quê quán:</label>
+                    <input type="text" id="hometown" name="hometown" readonly>
+        
+                    <label for="permanent_residence">Địa chỉ thường trú:</label>
+                    <input type="text" id="permanent_residence" name="permanent_residence" readonly>
+        
+                    <label for="date_of_expiry">Ngày hết hạn:</label>
+                    <input type="text" id="date_of_expiry" name="date_of_expiry" readonly>
+        
+                    <label for="issue_date">Ngày cấp:</label>
+                    <input type="text" id="issue_date" name="issue_date" readonly>
+                </form>
+            </div>
+    </div>
 
     <script>
+        // Function to populate the form with JSON data
+        function populateForm(data) {
+            const form = document.getElementById('dataForm');
+
+            data.forEach(item => {
+                const fieldName = item.class;
+                const fieldValue = item.text;
+
+                if (form.elements[fieldName]) {
+                    form.elements[fieldName].value = fieldValue;
+                }
+            });
+        }
+
         function upload() {
             var form = document.getElementById('uploadForm');
             var formData = new FormData(form);
-            var username = document.getElementById('username').value;
-            var filename = document.getElementById('image').files[0].name;  // Get the file name
+            var resultDisplay = document.getElementById('resultDisplay'); // Get the result div
 
-            // Append the username and filename to the URL
-            var url = 'http://127.0.0.1:5000/process/' + encodeURIComponent(username) + '/' + encodeURIComponent(filename);
-            location.replace(url);
+            fetch('/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json()) // Parse the response as JSON
+            .then(data => {
+                // Display the result in the result div
+                populateForm(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultDisplay.innerHTML = '<p>Error: ' + error + '</p>'; // Show error message
+            });
         }
+
+         
+        // Call the function to populate the form
+        
     </script>
 
 </body>
