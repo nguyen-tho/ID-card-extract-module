@@ -58,3 +58,15 @@ The program extract basic information such as name, ID number, date of birth,...
 9. Contact:
 
     Please contact with me at this email address to discuss: nguyencongtho116@gmail.com
+10. New update (March 25th 2025)
+    A simple UI using HTML, CSS and JS and an simple API using Flask
+    ```sh
+    # run app API
+    python app.py
+    ```
+    To run app, we setup a localhost with port 5000
+    ```
+    localhost:5000
+    #or
+    127.0.0.1:5000
+    ```
