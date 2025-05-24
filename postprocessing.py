@@ -1,6 +1,34 @@
 import json
 import os
 
+def uniform_json_data(json_data):
+    """
+    Transforms a list of dictionaries, modifying the 'class' key in each dictionary
+    according to the provided mapping.
+
+    Args:
+        json_data: A list of dictionaries.  Each dictionary is expected to have
+                   a 'class' and a 'text' key.
+
+    Returns:
+        A list of dictionaries with the 'class' keys modified as follows:
+            'date_of_birth' becomes 'dob'
+            'sex' becomes 'gender'
+            'date_of_expiry' becomes 'expiry'
+            (Leaves other 'class' values unchanged)
+    """
+    mapping = {
+        'date_of_birth': 'dob',
+        'sex': 'gender',
+        'date_of_expiry': 'expiry'
+    }
+
+    for item in json_data:
+        if 'class' in item:
+            original_class = item['class']
+            new_class = mapping.get(original_class, original_class)  # Default to original if not found
+            item['class'] = new_class  #  <-- Corrected:  Modify the 'class' key, not create a new one.
+    return json_data
 
 def read_json_file(file_path):
     print(f"Reading JSON from: {file_path}")
@@ -70,6 +98,9 @@ def merge_permanent_residence(name):
     # Filter and keep only "class" and "text" features
     new_data.extend([{"class": item["class"], "text": item["text"]} for item in data if item["class"] != "permanent_residence1" 
                      and item["class"] != "permanent_residence2"])
+    # Write the modified data to the output JSON file
+    # uniform the json data
+    new_data = uniform_json_data(new_data)
     # Write the modified data to the output JSON file
     with open(f'output/{name}/result.json', 'w', encoding='utf-8') as output_file:
         json.dump(new_data, output_file, ensure_ascii=False, indent=2)
