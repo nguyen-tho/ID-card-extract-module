@@ -35,10 +35,11 @@ The program extract basic information such as name, ID number, date of birth,...
    - QR code extract tool: https://pypi.org/project/qreader
 
 7. New update
-   - New model to detect QR code on Vietnamese ID card
+   - New model to detect QR code on Vietnamese ID card (depend on the detection model if they cannot detect QR code we cannot read issue date in the QR code)
    - Extract information from QR code such as issue date instead of create a new model to detect issue date at back-side of ID card
-   - Update with REST API (Incomplete)
+   - Update with REST API with Flask
    - Combine 2 models to improve the result
+   - Update multi-processing with threads
 8. Demo
 
    Input image
