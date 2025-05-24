@@ -4,17 +4,21 @@ This is a program to extract information from Vietnamese ID card
 
 The program extract basic information such as name, ID number, date of birth,.... are extracted from ID card and issue date is extracted from QR code
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-1. Download model file follow link: https://hub.ultralytics.com/models/hgfIRTQBokYdGBQS7orm (Model 1 - use for extract text on front side of IDcard except portrait and QR code) 
+
+1. Download model file follow link:
+
+   https://hub.ultralytics.com/models/hgfIRTQBokYdGBQS7orm (Model 1 - use for extract text on front side of IDcard except portrait and QR code) 
+
    Update new model: https://api.ultralytics.com/v1/predict/je3LTBqoLDRiZBtYRSYQ (Model 2 - use for extract QR code except text fields)
    
-2. Dataset:
+3. Dataset:
    - version 1 (not extract information from QR code): https://hub.ultralytics.com/datasets/EQ74fFtZdCei1GTLJRJF
    - version 2 (extract information from QR code): https://hub.ultralytics.com/datasets/G44KxW5Rce9ztGGqnI6X
-3. Clone the module:
+4. Clone the module:
    ```sh
    git clone https://github.com/nguyen-tho/ID-card-extract-module.git
    ```
-4. Install dependencies
+5. Install dependencies
  ```sh
  pip install -r requirements.txt
  ```   
