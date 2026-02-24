@@ -4,56 +4,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Upload</title>
+    <title>Image Upload & OCR Analysis</title>
     <style>
+        body { font-family: sans-serif; margin: 0; background-color: #f4f7f6; }
+        
         .container {
             display: flex;
-            /* Use flexbox to arrange elements side-by-side */
+            height: 100vh;
         }
 
-        /* Adjust the widths for your 1/3 and 2/3 layout */
         .left-panel {
-            /* New class for the left 1/3 area */
-            width: 33%;
-            /* Approximately 1/3 */
+            width: 40%;
             padding: 20px;
             box-sizing: border-box;
-            /* Include padding in width */
+            overflow-y: auto;
+            background-color: #fff;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
         }
 
         .right-panel {
-            /* New class/rename for the right 2/3 area */
-            width: 67%;
-            /* Approximately 2/3 */
+            width: 60%;
             padding: 20px;
-            border-left: 1px solid #ccc;
-            /* Separator */
             box-sizing: border-box;
+            overflow-y: auto;
         }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
+        /* Tối ưu hiển thị hình ảnh */
+        .image-container {
+            margin-top: 15px;
+            border: 1px dashed #bbb;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
         }
 
-        input {
-            width: 90%;
-            /* Adjust width for smaller panel */
-            padding: 5px;
+        .image-container h3 {
+            font-size: 14px;
+            color: #555;
             margin-bottom: 10px;
         }
 
-        /* Removed .form-container if it's not needed for visual layout beyond .right-panel */
-        /* .form-container {
-            width: 400px;
-            margin: 20px auto;
-        } */
-
-        #image {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            display: none; /* Ẩn mặc định khi chưa có ảnh */
+            margin-bottom: 10px;
         }
+
+        /* Hiển thị độ chính xác */
+        .accuracy-box {
+            background-color: #e8f4fd;
+            border: 1px solid #2196f3;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .confident-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .confident-box h3 {
+            margin-top: 0;
+            font-size: 16px;
+        }
+
+        .confident-box p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .confident-box strong {
+            font-weight: bold;
+        }
+
+        .confident-box span {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover { background-color: #45a049; }
     </style>
 </head>
 
@@ -61,180 +118,217 @@
 
     <div class="container">
         <div class="left-panel">
-            <h2>Image Upload</h2>
-
+            <h2>Hệ thống OCR CCCD</h2>
+            
             <form id="uploadForm" enctype="multipart/form-data">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-                <br>
-
+                <label for="username">Người dùng:</label>
+                <input type="text" id="username" name="username" required placeholder="Nhập tên...">
+                
                 <label for="image">Chọn ảnh CCCD:</label>
-                <input type="file" id="image" name="image" accept="image/*" multiple required>
-                <br>
-
-                <button type="button" onclick="upload()">Upload</button>
+                <input type="file" id="image" name="image" accept="image/*" required onchange="previewInputImage(event)">
+                
+                <button type="button" onclick="upload()">Xử lý hình ảnh</button>
             </form>
 
-            <div id="statusMessageDisplay" style="margin-top: 20px; color: blue;">
+            <hr>
+
+            <div class="image-container">
+                <h3>[1] Hình ảnh gốc</h3>
+                <img id="inputImage" src="#" alt="Original Image">
             </div>
-            <p id="demo"></p>
+
+            <div class="image-container">
+                <h3>[2] Ảnh sau xử lý</h3>
+                <img id="resultImage" src="#" alt="Processed Image">
+            </div>
+
+            <div class="confident-box" id="accuracySection" style="display:none;">
+                <h3>Thống kê độ tin cậy</h3>
+                <div style="margin-top: 10px;">
+                    <p><strong>Độ tin cậy mô hình (%):</strong> <span id="accuracyValue">0%</span></p>
+                    <p><strong>Độ tin cậy của mô hình:</strong> <span id="meanConfidence">0</span></p>
+                    <p><strong>Độ chính xác của mô hình:</strong> <span id="meanProb">0</span></p>
+                    <p><strong>Độ chính xác của mô hình (%):</strong> <span id="probPercentage">0%</span></p>
+                </div>
+            </div>
+
+
+            <div id="statusMessageDisplay" style="margin-top: 20px; color: blue; font-size: 14px;"></div>
         </div>
 
         <div class="right-panel">
             <form id="dataForm">
-                <h2>Kết quả thông tin trích xuất từ CCCD</h2>
-                <label for="name">Họ và tên:</label>
-                <input type="text" id="name" name="name" readonly>
+                <h2>Kết quả thông tin trích xuất</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label for="id">Số CCCD:</label>
+                        <input type="text" id="id" name="id" readonly>
 
-                <label for="dob">Ngày sinh:</label>
-                <input type="text" id="dob" name="dob" readonly>
+                        <label for="name">Họ và tên:</label>
+                        <input type="text" id="name" name="name" readonly>
 
-                <label for="gender">Giới tính:</label>
-                <input type="text" id="gender" name="gender" readonly>
+                        <label for="dob">Ngày sinh:</label>
+                        <input type="text" id="dob" name="dob" readonly>
 
-                <label for="nationality">Quốc tịch:</label>
-                <input type="text" id="nationality" name="nationality" readonly>
+                        <label for="gender">Giới tính:</label>
+                        <input type="text" id="gender" name="gender" readonly>
+                    </div>
+                    <div>
+                        <label for="nationality">Quốc tịch:</label>
+                        <input type="text" id="nationality" name="nationality" readonly>
 
-                <label for="id">Số CCCD</label>
-                <input type="text" id="id" name="id" readonly>
+                        <label for="hometown">Quê quán:</label>
+                        <input type="text" id="hometown" name="hometown" readonly>
 
-                <label for="hometown">Quê quán:</label>
-                <input type="text" id="hometown" name="hometown" readonly>
+                        <label for="permanent_residence">Địa chỉ thường trú:</label>
+                        <input type="text" id="permanent_residence" name="permanent_residence" readonly>
 
-                <label for="permanent_residence">Địa chỉ thường trú:</label>
-                <input type="text" id="permanent_residence" name="permanent_residence" readonly>
-
-                <label for="expiry">Ngày hết hạn:</label>
-                <input type="text" id="expiry" name="expiry" readonly>
-
-                <label for="issue_date">Ngày cấp:</label>
-                <input type="text" id="issue_date" name="issue_date" readonly>
+                        <label for="issue_date">Ngày cấp:</label>
+                        <input type="text" id="issue_date" name="issue_date" readonly>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
 
     <script>
+        // Xem trước ảnh ngay khi chọn file
+        function previewInputImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('inputImage');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
         function upload() {
             var form = document.getElementById('uploadForm');
             var formData = new FormData(form);
             var username = document.getElementById('username').value;
-            // --- CHANGE STARTS HERE ---
-            var statusMessageDisplay = document.getElementById('statusMessageDisplay'); // Target the new div for messages
-            // --- CHANGE ENDS HERE ---
+            var statusMessageDisplay = document.getElementById('statusMessageDisplay');
 
             if (!username) {
-                alert("Please enter a username.");
+                alert("Vui lòng nhập Username.");
                 return;
             }
 
-            // Clear previous messages and form data when a new upload starts
-            statusMessageDisplay.innerHTML = '<p>Uploading...</p>';
-            clearFormFields(); // Call a new helper function to clear the dataForm
+            statusMessageDisplay.innerHTML = '<p>Đang tải lên và xử lý...</p>';
+            document.getElementById('resultImage').style.display = 'none';
+            document.getElementById('accuracySection').style.display = 'none';
+            clearFormFields();
 
-            fetch('/', { // Assuming your Flask POST route for upload is still '/' or '/upload'
+            fetch('/', {
                 method: 'POST',
                 body: formData
             })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.text().then(text => {
-                            console.error('Server responded with an error HTTP status:', response.status, response.statusText);
-                            console.error('Raw server response:', text);
-                            throw new Error(`Upload failed. Server responded with status ${response.status}. See console for details.`);
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Upload response:', data);
-                    statusMessageDisplay.innerHTML = `<p>${data.message || 'Processing started...'}</p>`;
-
-                    pollForResult(username);
-                })
-                .catch(error => {
-                    console.error('Error during upload:', error);
-                    statusMessageDisplay.innerHTML = '<p>Error: ' + error.message + '</p>';
-                });
+            .then(response => response.json())
+            .then(data => {
+                statusMessageDisplay.innerHTML = `<p>${data.message || 'Đang nhận diện...'}</p>`;
+                pollForResult(username);
+            })
+            .catch(error => {
+                statusMessageDisplay.innerHTML = '<p style="color:red;">Lỗi: ' + error.message + '</p>';
+            });
         }
 
         function pollForResult(username) {
             fetch(`/result/${username}`)
-                .then(response => {
-                    if (!response.ok) {
-                        return response.text().then(text => {
-                            console.error('Polling failed. Server responded with an error HTTP status:', response.status, response.statusText);
-                            console.error('Raw server response during polling:', text);
-                            throw new Error(`Polling failed. Server responded with status ${response.status}. See console for details.`);
-                        });
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    console.log('Poll response:', data);
-                    var statusMessageDisplay = document.getElementById('statusMessageDisplay'); // Re-get it here for clarity
+                    var statusMessageDisplay = document.getElementById('statusMessageDisplay');
+                    console.log('Received data from server:', data);
 
-                    if (Array.isArray(data)) {
-                        populateForm(data);
-                        alert("Processing completed successfully!");
-                        statusMessageDisplay.innerHTML = '<p style="color: green;">Processing completed successfully!</p>'; // Success message
-                    } else if (data.status) {
-                        // Update the status message
-                        statusMessageDisplay.innerHTML = `<p>Status: ${data.message || data.status}</p>`;
-                        if (data.status === 'processing') {
-                            setTimeout(() => pollForResult(username), 2000);
-                        } else if (data.status === 'error') {
-                            console.error("Server reported an error during processing:", data.message);
-                            statusMessageDisplay.innerHTML = `<p style="color: red;">Error: ${data.message}</p>`; // Error message
+                    if (data.status === 'processing') {
+                        statusMessageDisplay.innerHTML = '<p>Đang xử lý...</p>';
+                        setTimeout(() => pollForResult(username), 2000);
+                    } 
+                    else if (data.status === 'completed') {
+                        // Process OCR result and populate form
+                        if (data.ocr_result && Array.isArray(data.ocr_result)) {
+                            console.log('Populating form with OCR result:', data.ocr_result);
+                            populateForm(data.ocr_result);
                         }
-                    } else {
-                        console.warn("Unexpected response during polling:", data);
-                        statusMessageDisplay.innerHTML = '<p style="color: orange;">Unexpected polling response. See console.</p>';
+                        
+                        // Display processed image
+                        if (data.output_image_path) {
+                            // Build the image URL from username
+                            const imageUrl = `/output/image/${username}/output.jpg`;
+                            const resImg = document.getElementById('resultImage');
+                            resImg.src = imageUrl;
+                            resImg.style.display = 'block';
+                            console.log('Image URL:', imageUrl);
+                        }
+
+                        // Display probability and confidence data
+                        if (data.prob_result) {
+                            document.getElementById('accuracySection').style.display = 'block';
+                            console.log('Probability data:', data.prob_result);
+                            
+                            const probData = data.prob_result;
+                            
+                            // Display score percentage
+                            if (probData.score_percentage !== undefined) {
+                                document.getElementById('accuracyValue').innerText = probData.score_percentage + '%';
+                            }
+                            
+                            // Display mean confidence
+                            if (probData.mean_confidence !== undefined) {
+                                document.getElementById('meanConfidence').innerText = probData.mean_confidence.toFixed(4);
+                            }
+                            
+                            // Display mean probability
+                            if (probData.mean_prob !== undefined) {
+                                document.getElementById('meanProb').innerText = probData.mean_prob.toFixed(4);
+                            }
+                            
+                            // Display probability percentage
+                            if (probData.prob_percentage !== undefined) {
+                                document.getElementById('probPercentage').innerText = probData.prob_percentage + '%';
+                            }
+                        }
+
+                        statusMessageDisplay.innerHTML = '<p style="color: green;">Thành công! Xử lý hoàn tất.</p>';
+                    }
+                    else if (data.status === 'error') {
+                        statusMessageDisplay.innerHTML = '<p style="color: red;">Lỗi: ' + (data.message || 'Không xác định') + '</p>';
+                        console.error('Processing error:', data.message);
+                    }
+                    else {
+                        statusMessageDisplay.innerHTML = '<p style="color: orange;">Trạng thái không xác định</p>';
+                        console.warn('Unknown status:', data.status);
                     }
                 })
                 .catch(error => {
-                    console.error('Polling error:', error);
                     var statusMessageDisplay = document.getElementById('statusMessageDisplay');
-                    statusMessageDisplay.innerHTML = '<p style="color: red;">Polling Error: ' + error.message + '</p>';
+                    statusMessageDisplay.innerHTML = '<p style="color: red;">Lỗi kết nối: ' + error.message + '</p>';
+                    console.error('Fetch error:', error);
                 });
         }
 
         function populateForm(data) {
-            console.log("populateForm called with data:", data);
-
             if (!Array.isArray(data)) {
-                console.warn("Received data is not an array, cannot populate form:", data);
+                console.error('Expected array data, got:', typeof data);
                 return;
             }
-
-            const form = document.getElementById('dataForm');
-            if (!form) {
-                console.error("Error: Form with ID 'dataForm' not found! Cannot populate fields.");
-                return;
-            }
-
+            
             data.forEach(item => {
-                const fieldId = item.class;
-                const fieldValue = item.text;
-
-                const inputElement = document.getElementById(fieldId);
-                if (inputElement) {
-                    inputElement.value = fieldValue;
-                } else {
-                    console.warn(`Element with ID '${fieldId}' not found in the form. Make sure your HTML input IDs match the 'class' values in your JSON.`);
+                if (item.class && item.text !== undefined) {
+                    const inputElement = document.getElementById(item.class);
+                    if (inputElement) {
+                        inputElement.value = item.text;
+                        console.log(`Set ${item.class} = ${item.text}`);
+                    } else {
+                        console.warn(`No input element found for class: ${item.class}`);
+                    }
                 }
             });
         }
 
-        // --- NEW HELPER FUNCTION TO CLEAR THE FORM ---
         function clearFormFields() {
-            const dataForm = document.getElementById('dataForm');
-            if (dataForm) {
-                dataForm.querySelectorAll('input[type="text"]').forEach(input => {
-                    input.value = ''; // Clear the value of each text input
-                });
-            }
+            document.querySelectorAll('#dataForm input').forEach(input => input.value = '');
         }
     </script>
 </body>
-
 </html>
