@@ -234,14 +234,14 @@ def text_extract_ocr(img_path, threshold):
                         labeled_objects.append({
                             "class": "issue_date",
                             "text": "",
-                            "prob": 0, #QR code cannot extract by OCR and it will detect exactly
+                            "prob": 0, #QR code cannot extract by OCR and it will detect exactly, when cannot detect QRcode, it will be 0
                             "confidence": score
                         })
                     else:
                         labeled_objects.append({
                             "class": "issue_date",
                             "text": formatted_date,
-                            "prob": 1, #QR code cannot extract by OCR and it will detect exactly
+                            "prob": 1, #QR code cannot extract by OCR and it will detect exactly, 
                             "confidence": score
                         })
             i = i + 1
@@ -267,6 +267,8 @@ def save_output(img_path, threshold, name):
         if score > threshold:
             if class_id in dictionary:
                 class_name = dictionary[class_id]
+                 # Convert to title case and replace underscores with spaces
+                
                 if class_name != 'person':
                     draw.rectangle([(int(x1), int(y1)), (int(x2), int(y2))], outline=(0, 255, 0), width=3)
                 
@@ -285,7 +287,7 @@ def save_output(img_path, threshold, name):
         if score > threshold:
             if class_id in dictionary:
                 class_name = dictionary[class_id]
-                if class_name == 'QRcode':
+                if class_name == 'QRcode' and class_name == 'gender':
                     draw.rectangle([(int(x1), int(y1)), (int(x2), int(y2))], outline=(0, 255, 0), width=3)
                 
                 # Define the position for the text

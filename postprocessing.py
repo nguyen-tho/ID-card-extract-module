@@ -107,24 +107,34 @@ def merge_permanent_residence(name):
 
 def mean_prob(name):
   #read json data
-  json_path = f'output/{name}/labeled_objects_filled.json'
-  with open(json_path, 'r', encoding='utf-8') as json_file:
+  json_path_input = f'output/{name}/labeled_objects_filled.json'
+  with open(json_path_input, 'r', encoding='utf-8') as json_file:
     data = json.load(json_file)
   prob_values = [entry["prob"] for entry in data]
   score_value = [entry["confidence"] for entry in data]
 
-# Calculate the mean
+  # Calculate the mean
   mean_prob = sum(prob_values) / len(prob_values)
   mean_score = sum(score_value) / len(score_value)
   prob_percentage = mean_prob*100
   score_percentage = mean_score*100
-  text_path = f'output/{name}/prob.txt'
-  with open(text_path, 'w') as txt:
-      txt.write(f"Mean confidence of model: {mean_score}\n")
-      txt.write(f"Percentage of mean score value: {score_percentage:.2f}%\n")
-      txt.write(f"Mean of prob values: {mean_prob}\n")
-      txt.write(f"Percentage of mean prob value: {prob_percentage:.2f}%")
-  print(f"The result is saved in {text_path}")
+  
+  # Tạo một dictionary để chứa dữ liệu
+  data_to_save = {
+    "mean_confidence": mean_score,
+    "score_percentage": round(score_percentage, 2),
+    "mean_prob": mean_prob,
+    "prob_percentage": round(prob_percentage, 2)
+  }
+
+  # Đường dẫn file JSON
+  json_path_output = f'output/{name}/prob.json'
+
+  # Ghi vào file định dạng JSON
+  with open(json_path_output, 'w', encoding='utf-8') as f:
+    json.dump(data_to_save, f, ensure_ascii=False, indent=4)
+
+  print(f"The result is saved in {json_path_output}")
 # Print the mean
   print("Calculate the extract probability and score is finished !")
   print(f"Mean confidence of model: {mean_score}")

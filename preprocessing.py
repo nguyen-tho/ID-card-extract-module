@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import os
 import matplotlib.pyplot as plt
 import realesrgan as real
 from skimage.filters import threshold_local
@@ -155,7 +156,20 @@ def deskew_image(image):
 
 def preprocessing(img_path): # input image is RGB or grayscale
     #read image
+    print(f"Reading image from: {img_path}")
+    
+    if not os.path.exists(img_path):
+        raise FileNotFoundError(f"Image file not found: {img_path}")
+    
     image = cv2.imread(img_path)
+    if image is None:
+        raise ValueError(f"Failed to read image from {img_path}. File may be corrupted or in unsupported format.")
+    
+    print(f"Image loaded successfully. Shape: {image.shape}")
+    
+    # Create temp directory if it doesn't exist
+    os.makedirs('temp', exist_ok=True)
+    
     # Downscale image as finding receipt contour is more efficient on a small image
     resize_ratio = 500 / image.shape[0]
     original = image.copy()
@@ -177,8 +191,8 @@ def preprocessing(img_path): # input image is RGB or grayscale
     #image_with_receipt_contour = cv2.drawContours(image.copy(), [receipt_contour], -1, (0, 255, 0), 2)
         scanned = wrap_perspective(original.copy(),
                                contour_to_rect(receipt_contour, resize_ratio))
-    except:
-        print("Can not do perspespective transformation for this image. Skip it!")
+    except Exception as e:
+        print(f"Can not do perspespective transformation for this image. Skip it! Error: {str(e)}")
         scanned = deskew(image)
         result = bw_scanner(scanned)
         print('Result image shape: ',result.shape)
@@ -206,6 +220,7 @@ def preprocessing(img_path): # input image is RGB or grayscale
         cv2.imwrite(perspective_path, scanned)
         output_path = real.realesrgan(perspective_path)
     
+    print(f"Preprocessing completed. Output path: {output_path}")
     return output_path #output is path of preprocessed image
     
     

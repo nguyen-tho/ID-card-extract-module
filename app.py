@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from process import processing  # Import the processing function from your module
 import sys
 import postprocessing as post
@@ -43,7 +43,7 @@ def upload_file(): # Renamed function to avoid conflict with the home route
         try:
             image.save(filepath)
         except Exception as e:
-            print(f"Error saving image: {e}", file=sys.stderr)
+            print(f"Error saving image: {e}")
             return jsonify({'error': f'Failed to save image: {str(e)}'}), 500
 
         # Set initial status for this user
@@ -63,21 +63,41 @@ def process_and_save_result(filepath, username):
         processing(filepath, username)
         # Once processing is done, update the status in our shared dictionary
         result_path = os.path.join('output', username, 'result.json')
+        ocr_result = None
         if os.path.exists(result_path):
-            result = post.read_json_file(result_path)
-            processing_results[username] = result # Store the actual result
-            print(f"Processing for {username} completed and result stored.")
-        else:
-            processing_results[username] = {'status': 'error', 'message': 'Processing finished but result file not found.'}
-            print(f"Processing for {username} completed, but result.json not found.", file=sys.stderr)
+            ocr_result = post.read_json_file(result_path) #ocr result
+            print(f"OCR result loaded for {username}")
+        
+        # output image path
+        output_image_path = os.path.join('output', username, 'output.jpg')
+        
+        # output confidence and prob in json result
+        prob_path = os.path.join('output', username, 'prob.json')
+        prob_result = None
+        if os.path.exists(prob_path):
+            prob_result = post.read_json_file(prob_path) #prob result
+            print(f"Prob result loaded for {username}")
+        
+        processing_results[username] = {
+            "ocr_result": ocr_result,
+            'output_image_path': output_image_path,
+            'prob_result': prob_result,
+            'status': 'completed',
+        } # Store the actual result with output image path
+        print(f"Processing for {username} completed and result stored.")
     except Exception as e:
         processing_results[username] = {'status': 'error', 'message': f'Error during processing: {str(e)}'}
-        print(f"Error processing for {username}: {str(e)}", file=sys.stderr)
+        print(f"Error processing for {username}: {str(e)}")
+        import traceback
+        traceback.print_exc()
     finally:
-        # Clean up the uploaded file if desired
+        # Clean up the uploaded file after processing is complete
         if os.path.exists(filepath):
-            os.remove(filepath)
-            print(f"Cleaned up uploaded file: {filepath}")
+            try:
+                os.remove(filepath)
+                print(f"Cleaned up uploaded file: {filepath}")
+            except Exception as e:
+                print(f"Failed to clean up file {filepath}: {str(e)}")
 
 
 # A route to retrieve results based on username (for polling)
@@ -86,17 +106,34 @@ def get_result(username):
     # Check if the result is in our in-memory dictionary
     if username in processing_results:
         result_data = processing_results[username]
-        # If it's the actual result (not just 'processing' status), you might want to clean up
-        # the entry after sending it, depending on your caching strategy.
-        # For simple demo, we'll keep it.
         return jsonify(result_data), 200
     else:
         # If username not found at all, it hasn't been uploaded or started yet
         return jsonify({'status': 'Processing not initiated or user not found.'}), 404
+
+
+# Route to serve images from output directory
+@app.route('/output/image/<username>/<filename>', methods=['GET'])
+def serve_output_image(username, filename):
+    # Security: only allow serving from the specific user's output directory
+    if filename not in ['output.jpg']:
+        return jsonify({'error': 'Invalid filename'}), 400
+    
+    user_output_dir = os.path.join('output', username)
+    if not os.path.exists(user_output_dir):
+        return jsonify({'error': 'User output directory not found'}), 404
+    
+    try:
+        return send_from_directory(user_output_dir, filename)
+    except Exception as e:
+        print(f"Error serving image: {str(e)}")
+        return jsonify({'error': 'Failed to serve image'}), 500
 
 if __name__ == '__main__':
     if not os.path.exists('uploads'):
         os.makedirs('uploads')
     if not os.path.exists('output'): # Ensure output directory exists
         os.makedirs('output')
+    if not os.path.exists('temp'):  # Ensure temp directory exists for preprocessing
+        os.makedirs('temp')
     app.run(debug=True, threaded=True)
