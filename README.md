@@ -22,16 +22,6 @@ The program extract basic information such as name, ID number, date of birth,...
  ```sh
  pip install -r requirements.txt
  ```   
-5. Run process.py
-   ```sh
-   # run processing function in process.py
-   python process.py
-   #run REST API
-   #python app.py
-   # API is incomplete 
-   #access http://127.0.0.1:5000 to observe the result
-   ```
-
 6. References
    - Label dataset tool: https://app.roboflow.com/
    - Training model tool: https://hub.ultralytics.com/
